@@ -1,1 +1,61 @@
-<div>WOw</div>
+<!DOCTYPE html>
+<html dir="ltr" lang="en-GB">
+<head>
+	<meta charset="utf-8"> 
+	<meta http-equiv="x-ua-compatible" content="ie=edge"> 
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"> 
+	<title>Email Extractor</title> 
+
+	<!-- CSS Styles -->
+	<link rel="stylesheet" type="text/css" href="/public/styles/index.css">
+	<link rel="stylesheet" type="text/css" href="/public/styles/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="/public/styles/font-awesome.min.css">
+
+	<!-- JS Scripts -->
+</head>
+<body class = "h-100 w-100">
+	<div class="landing-parent h-100 w-100 d-flex align-items-center justify-content-center row">
+		<div class = "container flex-column d-flex align-items-center justify-content-center row">
+			<div class = "card-box col-xs-12 col-sm-8 col-md-8 col-lg-6">
+				<h3>Email Extractor</h3>
+				<small>Sign in to get access</small>
+				<form action = "/request_access" method = "POST">
+					<div class="form-group mt-3">
+						<input type="text" name="access_id" value = "<%=data.access_id%>" class = "form-control" placeholder="Access ID">
+					</div>
+					<div class="form-group mt-3">
+						<input type="password" name="access_key" value = "<%=data.access_key%>" class = "form-control" placeholder="Access Key">
+					</div>
+					<div class="form-group mt-3">
+						<button class = "btn btn-success" type = "submit">Request Access</button>
+					</div>
+					<br />
+					<% if (status === false ) { %>
+						<div class="alert alert-danger">
+							<span class = "fa fa-exclamation-circle"></span>
+							<span><%=message%></span>
+						</div>
+					<%} else if (status === true ){%>
+						<div class="alert alert-success">
+							<span class = "fa fa-check-circle"></span>
+							<span><%=message%></span>
+						</div>
+					<%}%>
+
+				</form>
+				
+			</div>
+			<div class = "text-center mt-3 col-xs-12 col-sm-8 col-md-8 col-lg-6">
+				<small>Dont have an account ?</small>
+				<br/>
+				<small>Contact webmaster</small>
+			</div>
+		</div>
+	</div>
+</body>
+<script type="text/javascript">
+	<% if(status === true){%>
+		window.location.href = "/dashboard"
+	<%}%>
+</script>
+</html>
