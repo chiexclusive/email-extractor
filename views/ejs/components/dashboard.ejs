@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en-GB">
+<head>
+	<meta charset="utf-8"> 
+	<meta http-equiv="x-ua-compatible" content="ie=edge"> 
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"> 
+	<title>Email Extractor</title> 
+
+	<!-- CSS Styles -->
+	<link rel="stylesheet" type="text/css" href="/public/styles/index.css">
+	<link rel="stylesheet" type="text/css" href="/public/styles/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="/public/styles/font-awesome.min.css">
+
+	<!-- JS Scripts -->
+</head>
+<body class = "h-100 w-100">
+	<div class="landing-parent h-100 w-100 d-flex align-items-center justify-content-center row">
+		<div class = "container flex-column d-flex align-items-center justify-content-center row">
+			<div class = "card-box col-xs-12 col-sm-8 col-md-8 col-lg-6">
+				<h4>Welcome Master</h4>
+				<small class = "text-primary">Configure extractor to match your preferred result</small>
+
+				<br/>
+				<form class = "mt-3 pt-3">
+					<div class="form-group">
+						<label>Domain:</label>
+						<input title = "Target Domain" placeholder = "domain.com" class = "form-control" type="text" list = "domains"  name="domain" id = "domain">
+						<datalist id="domains">
+							<option value = "linkedin.com">
+							<option value = "facebook.com">
+							<option value = "twitter.com">
+							<option value = "instagram.com">
+						</datalist>
+					</div>
+					<div class="form-group mt-3">
+						<label>Target Profession:</label>
+						<input title = "Target Profession" placeholder = "CEO" class = "form-control" type="text" list = "professions"  name="profession" id = "profession">
+						<datalist id="professions">
+							<option value = "MDs">
+							<option value = "Directors">
+							<option value = "CEO">
+							<option value = "Customer Service Agent">
+							<option value = "Engineers">
+						</datalist>
+					</div>
+					<div class="form-group mt-3">
+						<label>Mail Type:</label>
+						<input title = "Target Email" placeholder = "gmail" class = "form-control" type="text" list = "emails"  name="email" id = "email">
+						<datalist id="emails">
+							<option value = "gmail">
+							<option value = "outlook">
+							<option value = "hotmail">
+							<option value = "yahoo">
+							<option value = "office365">
+						</datalist>
+					</div>
+					<div class="form-group mt-3">
+						<label>Limit:</label>
+						<select class = "form-control" id = "limit">
+							<option value = "100">100</option>
+							<option value = "200">200</option>
+							<option value = "300">300</option>
+							<option value = "400">400</option>
+							<option value = "500">500</option>
+						</select>
+					</div>
+
+					<h6 class = "mt-3" style = "font-size: 12px"><small><b>Note: </b>User can only generate a maximum of 500 emails in a day. Access will be blocked after 3 trials to ensure anonymity</small><h6>
+
+					<div class="log"></div>
+
+					<div class="form-group">
+						<button type = "button" class = "btn btn-success" id = "extract-button">Extract</button>
+					</div>
+
+					<div class="form-group output" class = "mt-3" id = "output">
+						
+					</div>
+					
+				</form>
+				
+			</div>
+			<div class = "text-center mt-3 col-xs-12 col-sm-8 col-md-8 col-lg-6">
+				<small>Dont have an account ?</small>
+				<br/>
+				<small>Contact webmaster</small>
+			</div>
+		</div>
+	</div>
+</body>
+<script type="text/javascript" src = "/public/scripts/FileSaver.js"></script>
+<script>
+	try{
+		// Variables
+		var emails = [];
+
+
+
+		//Handle extraction
+		const extractBtn = document.querySelector("#extract-button")
+		const outputContainer = document.querySelector("#output")
+		extractBtn.onclick = function(){
+			const domain = document.querySelector("#domain").value
+			const profession = document.querySelector("#profession").value
+			const email = document.querySelector("#email").value
+			const limit = document.querySelector("#limit").value
+			const inputs = [...document.querySelectorAll("input")]
+			inputs.map(field => field.classList.remove("field-error"))
+			const btn = this
+			btn.textContent = "Extracting..."
+			btn.setAttribute("disabled", true)
+			fetch("/extract", {method: "POST", headers: {"content-type": "application/x-www-form-urlencoded"}, body: `domain=${domain}&profession=${profession}&email=${email}&limit=${limit}`})
+			.then((res) => {
+				return res.json()
+			})
+			.then((res) => {
+				console.log(res);
+				//Handle error and success
+				if(!res.status){
+					log(res.message, false)
+					console.log(res.field)
+					if("field" in res) document.querySelector("#"+res.field).classList.add("field-error")
+				}else{
+					outputContainer.innerHTML = `
+					<div class = mt-3>
+						<span class = "fa fa-file"></span>
+						${res.file}.txt
+					</div>
+					<div class = "mt-3">
+						<button onclick = "download" type = "button" data-file = "${res.file}" class = "btn btn-success" id = "download-button">
+						Download 
+							<span class = "fa fa-download"></span>
+						</button>
+					</div>`
+					log(res.message, true)
+
+
+					//Get handle button
+					const downloadBtn = document.querySelector("#download-button");
+
+					//Handle download click
+					downloadBtn.onclick = function(){
+						download(this.getAttribute("data-file"))
+					}
+				}
+
+				btn.textContent = "Extract"
+				btn.removeAttribute("disabled")
+			})
+			.catch((err) => {
+				console.log(err)
+				btn.textContent = "Extract"
+				btn.removeAttribute("disabled")
+			})
+		}
+
+
+		//Handle remove error from field on certain actions
+		document.querySelector("input").onfocus = function(){
+			this.classList.remove("field-error")
+		}
+
+
+
+		//Handle download action
+		function download(identifier){
+
+			fetch("/download", {method: "POST", body: {identifier}})
+			.then((res) => {
+				return res.json()
+			})
+			.then((res) => {
+				console.log(res)
+				const txt = res.join(",\r\n")
+				
+				var blob = new Blob([txt], {type: "text/plain;charset=utf-8"});
+				saveAs(blob, `email_${res.length}.txt`)
+			})
+		}
+
+
+
+		// Implement log
+		function log(mesg, isSuccess){
+			document.querySelector(".log").innerHTML = `
+				<div class = "alert alert-${isSuccess? 'success': 'danger'}">
+					<span class = "fa fa-${isSuccess? 'check': 'exclamation'}-circle"></span>
+					<span>${mesg}</span>
+				</div>
+			`
+		}
+
+
+		//Handle validation of the field
+
+		// function validateField(){
+		// 	const domain = document.querySelector("#domain")
+		// 	const profession = document.querySelector("#profession")
+		// 	const email = document.querySelector("#email")
+		// 	const limit = document.querySelector("#limit")
+		// }
+	}catch(err){
+		console.log(err)
+	}
+	
+	
+</script>
+</html>
