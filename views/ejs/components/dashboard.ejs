@@ -41,6 +41,7 @@
 							<option value = "CEO">
 							<option value = "Customer Service Agent">
 							<option value = "Engineers">
+							<option value = "Hr">
 						</datalist>
 					</div>
 					<div class="form-group mt-3">
@@ -103,6 +104,7 @@
 			const domain = document.querySelector("#domain").value
 			const profession = document.querySelector("#profession").value
 			const email = document.querySelector("#email").value
+			const country = document.querySelector("#country").value
 			const limit = document.querySelector("#limit").value
 			const inputs = [...document.querySelectorAll("input")]
 			inputs.map(field => field.classList.remove("field-error"))
@@ -140,7 +142,7 @@
 
 					//Handle download click
 					downloadBtn.onclick = function(){
-						download(this.getAttribute("data-file"))
+						download()
 					}
 				}
 
@@ -163,9 +165,8 @@
 
 
 		//Handle download action
-		function download(identifier){
-
-			fetch("/download", {method: "POST", body: {identifier}})
+		function download(){
+			fetch("/download", {method: "POST"})
 			.then((res) => {
 				return res.json()
 			})
@@ -190,15 +191,6 @@
 			`
 		}
 
-
-		//Handle validation of the field
-
-		// function validateField(){
-		// 	const domain = document.querySelector("#domain")
-		// 	const profession = document.querySelector("#profession")
-		// 	const email = document.querySelector("#email")
-		// 	const limit = document.querySelector("#limit")
-		// }
 	}catch(err){
 		console.log(err)
 	}

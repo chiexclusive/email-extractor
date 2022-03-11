@@ -5,6 +5,7 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const {database} = require("./../storage");
+const ExtractorEngine = require("./../utils/extractor.utils")
 
 
 
@@ -37,6 +38,8 @@ class Extract {
 	handleExtraction(req, reply){
 		const date = new Date()
 		const today = date.getDay()+"/"+date.getMonth()+"/"+date.getFullYear();
+		let emails = [];
+		let fileName
 
 		if(database.today !== today){
 			database.genNum = 0
@@ -44,22 +47,47 @@ class Extract {
 			database.today = today;
 		}
 		
-		const emails = ["test@gmail.com", "google@gmail.com"];
 
-		const fileName = `emails_${emails.length}`;
+		let {domain, profession, email, limit} = req.body;
 
-		//Update DB
-		database.emails[fileName] = emails;
-		database.trialsLeft -= 1
-		database.genNum += emails.length
+		//Cleanup data
+		domain = domain.replace(/\..+$/ig, "").replace(/^.+:\/\/.*\./ig, "").replace(/^.+:\/\//ig, "")
+		domain = "site:"+domain+".com";
+		profession = "\""+profession+"\"+";
+		email = /\@/.test(email)? email.match(/@.+$/g) || "@gmail.com" : email
+		email = Array.isArray(email) ? email[0] : email
+		email = /\.com$/.test(email) ? email : email + ".com"
+		email = /^\@/.test(email) ? email : "@"+email
+		limit = parseInt(limit) || 10;
 
-		reply.code(200).type("application/json").send(
-			JSON.stringify({
-				status: true,
-				message: "Emails successfully extracted",
-				file: fileName
-			})
-		)
+		const extraction = new ExtractorEngine()
+
+		extraction
+		.then(async(instance) => {
+			const query = `${domain} ${profession} ${email} `			
+			await instance.startChrome()
+			emails = await instance.getEmail(query, limit)
+			fileName = `emails_${emails.length}`;
+
+			//Update DB
+			database.emails = emails;
+			database.trialsLeft -= 1
+			database.genNum += emails.length
+
+
+			reply.code(200).type("application/json").send(
+				JSON.stringify({
+					status: true,
+					message: "Emails successfully extracted",
+					file: fileName
+				})
+			)
+
+			
+		})
+		.catch((err) => {
+			console.log(err)
+		})
 	}
 
 

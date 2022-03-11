@@ -3,20 +3,15 @@
 // Dependencies
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const {database} = require("../storage")
 
 
 class Download {
 
 	//@name - Method
-	//@description - Check Auth
-
-
-
-	//@name - Method
-	//@description - Process Access Request
+	//@description - Download Text File of Emails
 	processDownload(req, reply){
-		// const {fileName} = req.body;
-		reply.type("application/json").send(JSON.stringify(["chiboy@gmail.com", "isaac@gmail.com"]));
+		reply.type("application/json").send(JSON.stringify(database.emails));
 	}
 
 

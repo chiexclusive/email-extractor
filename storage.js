@@ -2,7 +2,7 @@ const database = {
 	genNum: 0,
 	trialsLeft: 3,
 	today: null,
-	emails: {},
+	emails: []
 }
 
 module.exports = {database}
