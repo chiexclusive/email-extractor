@@ -1,5 +1,14 @@
 const email = require('node-email-extractor').default;
-const puppeteer = require("puppeteer");
+const puppeteer = require("puppeteer-extra");
+const stealth = require("puppeteer-extra-plugin-stealth");
+const useProxy = require("puppeteer-page-proxy")
+const userAgentAnon = require("puppeteer-extra-plugin-anonymize-ua")
+puppeteer.use(stealth());
+puppeteer.use(userAgentAnon());
+
+const PROXY_SERVER = [
+	"103.139.47.250:8080"	
+]
 
 
 class ExtractorEngine {
@@ -12,14 +21,20 @@ class ExtractorEngine {
 		return new Promise((resolve) => resolve(this));
 	}
 
+
+	getRandomIndex(num){
+		return Math.floor((Math.random() * num))
+	}
+
 	startChrome(){
+		const randomIndex = this.getRandomIndex(PROXY_SERVER.length)
 		const instance = this;
 		return new Promise(async (resolve, reject) => {
 			try{
 				const options = {
 					"args": [
 						'--no-sandbox',
-						'--disable-setuid-sandbox'
+						'--disable-setuid-sandbox',
 					], 
 					headless: true,
 					slowMo: 100
@@ -42,11 +57,9 @@ class ExtractorEngine {
 
 
 
-	async scrapeEmail(url){
+	async scrapeEmail(html){
 		return new Promise(async (resolve) => {
-			console.log(url)
-			const data = await email.url(url);
-			console.log(data)
+			const data = email.text(html);
 			return resolve(data.emails)
 		})
 		
@@ -58,8 +71,7 @@ class ExtractorEngine {
 
 			try{
 
-				//Variables
-				var html = "", newMails = [], emailTarget =0
+				var html = "", newMails = [], emailTarget = 0
 
 				//Start with google
 				if(!this.isGoogleEnd){
@@ -67,6 +79,7 @@ class ExtractorEngine {
 					if(!this.googleNextSelector){
 						//Start new page
 						this.googlePage = await this.chrome.newPage();
+						// await useProxy(this.googlePage, PROXY_SERVER[0])
 						//Go to google with search query
 						await this.googlePage.goto( `https://google.com/search?q=${query}`, {waitUntil: "networkidle0", timeout: 1000000});
 						console.log("page load end");
@@ -77,19 +90,21 @@ class ExtractorEngine {
 						await this.googlePage.waitForNavigation({waitUntil: "networkidle0", timeout: 1000000})
 					}
 					//Scrape
-					let url = await this.googlePage.evaluate(() => {
-						return window.location.href
+					html = await this.googlePage.evaluate(() => {
+						return document.querySelector("body").innerHTML;
 					})
+
+					html = html.replace(/<\/*b?>/ig, "").replace(/<\/*strong?>/ig, "");
 					
 					//Get emails
-					let newMails = await this.scrapeEmail(url);
+					newMails = await this.scrapeEmail(html);
 				
 					//Clean emails
 					newMails = this.cleanEmails(newMails)
 					//Store
 					if(newMails) this.emails = [...this.emails, ...newMails];
 					//Check is the target is met
-					let emailTarget = this.emailTarget();
+					emailTarget = this.emailTarget();
 					console.log(this.emails.length)
 					console.log(this.limit)
 					
@@ -117,11 +132,14 @@ class ExtractorEngine {
 						await this.bingPage.waitForNavigation({waitUntil: "networkidle0", timeout: 1000000})
 					}
 					//Scrape
-					url = await this.bingPage.evaluate(() => {
-						return window.location.href
+					html = await this.bingPage.evaluate(() => {
+						return document.querySelector("body").innerHTML;
 					})
+
+					html = html.replace(/<\/*b?>/ig, "").replace(/<\/*strong?>/ig, "");
+
 					//Get emails
-					newMails = await this.scrapeEmail(url);
+					newMails = await this.scrapeEmail(html);
 					//Clean emails
 					newMails = this.cleanEmails(newMails)
 					//Store
@@ -154,11 +172,14 @@ class ExtractorEngine {
 						await this.yahooPage.waitForNavigation({waitUntil: "networkidle0", timeout: 1000000})
 					}
 					//Scrape
-					url = await this.yahooPage.evaluate(() => {
-						return window.location.href;
+					html = await this.yahooPage.evaluate(() => {
+						return document.querySelector("body").innerHTML;
 					})
+
+					html = html.replace(/<\/*b?>/ig, "").replace(/<\/*strong?>/ig, "");
+
 					//Get emails
-					newMails = await this.scrapeEmail(url);
+					newMails = await this.scrapeEmail(html);
 					//Clean emails
 					newMails = this.cleanEmails(newMails)
 					//Store
@@ -189,11 +210,13 @@ class ExtractorEngine {
 						await this.duckDuckGoPage.waitForResponse(response => response.status === 200)
 					}
 					//Scrape
-					url = await this.duckDuckGoPage.evaluate(() => {
-						return window.location.href
+					html = await this.duckDuckGoPage.evaluate(() => {
+						return document.querySelector("body").innerHTML;
 					})
+
+					html = html.replace(/<\/*b?>/ig, "").replace(/<\/*strong?>/ig, "");
 					//Get emails
-					newMails = await this.scrapeEmail(url);
+					newMails = await this.scrapeEmail(html);
 					let uniqueMail = []
 
 					if(!this.previousDuckDuckEmailLength) this.previousDuckDuckEmailLength = 0;
@@ -238,11 +261,14 @@ class ExtractorEngine {
 						await this.yandexPage.waitForResponse(response => response.status === 200)
 					}
 					//Scrape
-					url = await this.yandexPage.evaluate(() => {
-						return window.location.href
+					html = await this.yandexPage.evaluate(() => {
+						return document.querySelector("body").innerHTML;
 					})
+
+					html = html.replace(/<\/*b?>/ig, "").replace(/<\/*strong?>/ig, "");
+
 					//Get emails
-					newMails = await this.scrapeEmail(url);
+					newMails = await this.scrapeEmail(html);
 					let uniqueMail = []
 
 					if(!this.previousYandexEmailLength) this.previousYandexEmailLength = 0;
@@ -265,7 +291,7 @@ class ExtractorEngine {
 					emailTarget = this.emailTarget();
 					if(emailTarget.isMet) return resolve(this.emails)
 					//Check if the next button still exist on the page
-					this.isYandexEnd = await yandexPage.evaluate(() => {
+					this.isYandexEnd = await this.yandexPage.evaluate(() => {
 						return document.querySelector(this.yandexNextSelector) ? false : true
 					})
 
@@ -274,10 +300,11 @@ class ExtractorEngine {
 
 				if(this.isGoogleEnd && this.isBindEnd && this.isYandexEnd && this.isDuckDuckGoEnd && this.isYahooEnd) resolve(this.emails)
 				else {
-					console.log("I am iterating now")
-					await (() => new Promise((resolve) => setTimeout(() => resolve(), 5000)))();
-					let result = await this.getEmail(query, limit)
-					return resolve(result)
+					return resolve(this.emails)
+					// console.log("I am iterating now")
+					// await (() => new Promise((resolve) => setTimeout(() => resolve(), 5000)))();
+					// let result = await this.getEmail(query, limit)
+					// return resolve(result)
 				}
 
 			}catch(err){

@@ -31,6 +31,10 @@
     "point-of-view": "^5.1.0",
     "proxy-from-env": "^1.1.0",
     "puppeteer": "^13.5.0",
+    "puppeteer-extra": "^3.2.3",
+    "puppeteer-extra-plugin-anonymize-ua": "^2.3.3",
+    "puppeteer-extra-plugin-stealth": "^2.9.0",
+    "puppeteer-page-proxy": "^1.2.8",
     "serve-static": "^1.14.2",
     "trimmer": "^2.0.0"
   }
