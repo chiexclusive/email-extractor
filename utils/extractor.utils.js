@@ -367,6 +367,14 @@ class ExtractorEngine {
 
 		}else return {isMet: false}
 	}
+
+	exitBrowser(){
+		const instance = this;
+		return new Promise((resolve, reject) => {
+			await instance.chrome.close();
+			resolve()
+		})
+	}
 }
 
 

@@ -82,6 +82,8 @@ class Extract {
 				})
 			)
 
+			await instance.exitBrowser()
+
 			
 		})
 		.catch((err) => {
