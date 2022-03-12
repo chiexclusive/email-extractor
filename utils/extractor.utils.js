@@ -345,6 +345,7 @@ class ExtractorEngine {
 
 	cleanEmails(emails){
 		let cleanedEmails = [];
+		if(emails ==null) return []
 		emails.map(email => {
 			if(!/\.js$/i.test(email) && !/\.css$/i.test(email)  && !/\.svg$/i.test(email) ) cleanedEmails.push(email.toString().toLowerCase())
 		})
