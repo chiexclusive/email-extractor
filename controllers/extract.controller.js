@@ -27,7 +27,7 @@ class Extract {
 		// const date = new Date()
 		// let today = date.getDay()+"/"+date.getMonth()+"/"+date.getFullYear();
 		// if(database.today === today && database.trialsLeft > 3) return reply.code(400).type("application/json").send({status: false, message: "Trial exceeded"})
-		// if(database.today === today && (+database.genNum + (+limit))  > 500) return reply.code(400).type("application/json").send({status: false, message: `You have ${500 - database.genNum} number of email left`})
+		if(database.today === today && (+database.genNum + (+limit))  > 500) return reply.code(400).type("application/json").send({status: false, message: `You have ${500 - database.genNum} number of email left`})
 
 		done();
 	}
