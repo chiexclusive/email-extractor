@@ -6,9 +6,10 @@ const userAgentAnon = require("puppeteer-extra-plugin-anonymize-ua")
 puppeteer.use(stealth());
 puppeteer.use(userAgentAnon());
 
-const PROXY_SERVER = [
-	"103.139.47.250:8080"	
-]
+
+// const PROXY_SERVER = [
+// 	"103.139.47.250:8080"	
+// ]
 
 
 class ExtractorEngine {
@@ -27,7 +28,7 @@ class ExtractorEngine {
 	}
 
 	startChrome(){
-		const randomIndex = this.getRandomIndex(PROXY_SERVER.length)
+		// const randomIndex = this.getRandomIndex(PROXY_SERVER.length)
 		const instance = this;
 		return new Promise(async (resolve, reject) => {
 			try{
