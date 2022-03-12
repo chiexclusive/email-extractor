@@ -37,7 +37,8 @@ class ExtractorEngine {
 						'--disable-setuid-sandbox',
 					], 
 					headless: true,
-					slowMo: 50
+					slowMo: 50,
+					userDataDir: "./user_data2"
 				}
 
 				if(process.env.NODE_ENV.toString().trim() === "development"){
