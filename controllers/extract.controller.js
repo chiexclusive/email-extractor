@@ -64,7 +64,6 @@ class Extract {
 		extraction
 		.then(async(instance) => {
 			const query = `${domain} ${keyword} ${email} `			
-			await instance.startChrome()
 			emails = await instance.getEmail(query, limit)
 			fileName = `emails_${emails.length}`;
 
