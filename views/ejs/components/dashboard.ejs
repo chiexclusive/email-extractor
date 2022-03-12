@@ -33,15 +33,17 @@
 						</datalist>
 					</div>
 					<div class="form-group mt-3">
-						<label>Target Profession:</label>
-						<input title = "Target Profession" placeholder = "CEO" class = "form-control" type="text" list = "professions"  name="profession" id = "profession">
-						<datalist id="professions">
+						<label>Keywords:</label>
+						<input title = "Keywords" placeholder = "CEO" class = "form-control" type="text" list = "keywords"  name="keyword" id = "keyword">
+						<datalist id="keywords">
 							<option value = "MDs">
 							<option value = "Directors">
 							<option value = "CEO">
 							<option value = "Customer Service Agent">
 							<option value = "Engineers">
 							<option value = "Hr">
+							<option value = "Opensea">
+							<option value = "Crypto">
 						</datalist>
 					</div>
 					<div class="form-group mt-3">
@@ -58,15 +60,14 @@
 					<div class="form-group mt-3">
 						<label>Limit:</label>
 						<select class = "form-control" id = "limit">
+							<option value = "100">10</option>
+							<option value = "100">20</option>
+							<option value = "100">50</option>
 							<option value = "100">100</option>
-							<option value = "200">200</option>
-							<option value = "300">300</option>
-							<option value = "400">400</option>
-							<option value = "500">500</option>
 						</select>
 					</div>
 
-					<h6 class = "mt-3" style = "font-size: 12px"><small><b>Note: </b>User can only generate a maximum of 500 emails in a day. Access will be blocked after 3 trials to ensure anonymity</small><h6>
+					<h6 class = "mt-3" style = "font-size: 12px"><small><b>Note: </b>User can only generate a maximum of 100 emails per request and 500 emails in a day.</small><h6>
 
 					<div class="log"></div>
 
@@ -102,7 +103,7 @@
 		const outputContainer = document.querySelector("#output")
 		extractBtn.onclick = function(){
 			const domain = document.querySelector("#domain").value
-			const profession = document.querySelector("#profession").value
+			const keyword = document.querySelector("#keyword").value
 			const email = document.querySelector("#email").value
 			const limit = document.querySelector("#limit").value
 			const inputs = [...document.querySelectorAll("input")]
@@ -110,7 +111,7 @@
 			const btn = this
 			btn.textContent = "Extracting..."
 			btn.setAttribute("disabled", true)
-			fetch("/extract", {method: "POST", headers: {"content-type": "application/x-www-form-urlencoded"}, body: `domain=${domain}&profession=${profession}&email=${email}&limit=${limit}`})
+			fetch("/extract", {method: "POST", headers: {"content-type": "application/x-www-form-urlencoded"}, body: `domain=${domain}&keyword=${keyword}&email=${email}&limit=${limit}`})
 			.then((res) => {
 				return res.json()
 			})
