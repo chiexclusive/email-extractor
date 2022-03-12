@@ -53,7 +53,7 @@ class ExtractorEngine {
 				instance.bingPage = await instance.chrome.newPage();
 				instance.yahooPage = await instance.chrome.newPage();
 				instance.duckDuckGoPage = await instance.chrome.newPage();
-				instance.yandexPage = await instance.chrome.newPage();
+		
 				console.log("Chrome has been launched");
 				resolve();
 			}catch(err){
@@ -74,7 +74,7 @@ class ExtractorEngine {
 		
 	}
 
-	async getEmail(query, limit = this.limit){
+	async getEmail(query, limit){
 		this.limit = limit;
 		return new Promise(async (resolve, reject) => {
 
@@ -102,10 +102,13 @@ class ExtractorEngine {
 						return document.querySelector("body").innerHTML;
 					})
 
-					html = html.replace(/<\/*b?>/ig, "").replace(/<\/*strong?>/ig, "");
+					// html = html.replace(/<\/*b?>/ig, "").replace(/<\/*strong?>/ig, "");
+					// html = html.replace(/<\/*.+?>/ig, " ").replace(/\"/ig, " ").replace(/\'/ig, " ").replaceAll("(", " ").replaceAll(")", " ").replaceAll("[", " ").replaceAll("]", " ");
+					// html = html.toString();
 					
 					//Get emails
-					newMails = await this.scrapeEmail(html);
+					newMails = await this.scrapeEmail(html)
+					console.log(newMails)
 				
 					//Clean emails
 					newMails = this.cleanEmails(newMails)
@@ -144,9 +147,11 @@ class ExtractorEngine {
 					})
 
 					html = html.replace(/<\/*b?>/ig, "").replace(/<\/*strong?>/ig, "");
+					html = html.replace(/<\/*.+?>/ig, " ").replace(/\"/ig, " ").replace(/\'/ig, " ").replaceAll("(", " ").replaceAll(")", " ").replaceAll("[", " ").replaceAll("]", " ");
+					html = html.toString();
 
 					//Get emails
-					newMails = await this.scrapeEmail(html);
+					newMails = html.match(/\S+@{1,1}\S+?\.{1,1}com{1,1}?/g)
 					//Clean emails
 					newMails = this.cleanEmails(newMails)
 					//Store
@@ -236,9 +241,9 @@ class ExtractorEngine {
 					html = html.replace(/<\/*b?>/ig, "").replace(/<\/*strong?>/ig, "");
 					html = html.replace(/<\/*.+?>/ig, " ").replace(/\"/ig, " ").replace(/\'/ig, " ").replaceAll("(", " ").replaceAll(")", " ").replaceAll("[", " ").replaceAll("]", " ");
 					html = html.toString();
-					console.log(html.match(/\S+@{1,1}\S+?\.{1,1}com{1,1}?/g))
+
 					//Get emails
-					newMails = await this.scrapeEmail(html);
+					newMails = html.match(/\S+@{1,1}\S+?\.{1,1}com{1,1}?/g)
 					let uniqueMail = []
 
 					if(!this.previousDuckDuckEmailLength) this.previousDuckDuckEmailLength = 0;
@@ -341,7 +346,7 @@ class ExtractorEngine {
 	cleanEmails(emails){
 		let cleanedEmails = [];
 		emails.map(email => {
-			if(!/\.js$/i && !/\.css$/i && !/\.svg$/i) cleanedEmails.push(email.toString().toLowerCase())
+			if(!/\.js$/i.test(email) && !/\.css$/i.test(email)  && !/\.svg$/i.test(email) ) cleanedEmails.push(email.toString().toLowerCase())
 		})
 
 		return cleanedEmails;
