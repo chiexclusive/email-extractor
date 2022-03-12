@@ -364,7 +364,7 @@ class ExtractorEngine {
 }
 
 
-// module.exports = ExtractorEngine;
+module.exports = ExtractorEngine;
 
 
 // const extraction = new ExtractorEngine()
