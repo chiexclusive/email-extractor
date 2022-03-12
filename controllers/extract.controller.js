@@ -81,7 +81,7 @@ class Extract {
 				})
 			)
 
-			await instance.exitBrowser()
+			// await instance.exitBrowser()
 
 			
 		})

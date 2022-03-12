@@ -34,7 +34,6 @@ function startBrowser(){
 			yahooPage = await chrome.newPage();
 			duckDuckGoPage = await chrome.newPage();
 			console.log("Chrome has been launched");
-
 			resolve({googlePage, bingPage, yahooPage, duckDuckGoPage});
 		}catch(err){
 			console.log(err)
@@ -43,5 +42,4 @@ function startBrowser(){
 	})
 }
 
-const pages = startBrowser();
-module.exports = pages;
+module.exports = startBrowser();

@@ -1,6 +1,6 @@
 const email = require('node-email-extractor').default;
-const {googlePage, bingPage, yahooPage, duckDuckGoPage} = require("./../app/browser");
-
+const browser = require("./../app/browser");
+let  googlePage, bingPage, yahooPage, duckDuckGoPage;
 
 
 class ExtractorEngine {
@@ -10,7 +10,16 @@ class ExtractorEngine {
 		this.limit = 10;
 		this.start = 0;
 		this.firstPage = true;
-		return new Promise((resolve) => resolve(this));
+		return new Promise(async(resolve) =>{
+			let pages = await browser;
+			googlePage = pages.googlePage;
+			bingPage = pages.bingPage;
+			yahooPage = pages.yahooPage;
+			duckDuckGoPage = pages.duckDuckGoPage;
+			console.log("==================Browser Pages ===============")
+			console.log(googlePage)
+			resolve(this)
+		});
 	}
 
 
@@ -323,13 +332,13 @@ class ExtractorEngine {
 		}else return {isMet: false}
 	}
 
-	exitBrowser(){
-		const instance = this;
-		return new Promise(async (resolve, reject) => {
-			await instance.chrome.close();
-			resolve()
-		})
-	}
+	// exitBrowser(){
+	// 	const instance = this;
+	// 	return new Promise(async (resolve, reject) => {
+	// 		await instance.chrome.close();
+	// 		resolve()
+	// 	})
+	// }
 }
 
 

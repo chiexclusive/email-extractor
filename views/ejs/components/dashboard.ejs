@@ -102,6 +102,8 @@
 		const extractBtn = document.querySelector("#extract-button")
 		const outputContainer = document.querySelector("#output")
 		extractBtn.onclick = function(){
+			outputContainer.innerHTML = "";
+			document.querySelector(".log").innerHTML = ""
 			const domain = document.querySelector("#domain").value
 			const keyword = document.querySelector("#keyword").value
 			const email = document.querySelector("#email").value
