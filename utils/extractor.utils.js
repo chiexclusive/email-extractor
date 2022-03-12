@@ -370,7 +370,7 @@ class ExtractorEngine {
 
 	exitBrowser(){
 		const instance = this;
-		return new Promise((resolve, reject) => {
+		return new Promise(async (resolve, reject) => {
 			await instance.chrome.close();
 			resolve()
 		})
