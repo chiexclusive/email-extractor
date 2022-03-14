@@ -14,6 +14,12 @@ const fastifyCookie = require("fastify-cookie");
 const fastifySimpleForm = require("fastify-simple-form")
 const environment = require("dotenv")
 const bootstrapDatabase = require("./../conns/mongo.conn.js")
+const httpTimeout = require('fastify-server-timeout')
+
+
+
+
+
 
 // USE ENVIRONMENT FROM FILE
 environment.config();
@@ -29,6 +35,10 @@ fastify.register(fastifySimpleForm, {
 	urlencoded: true,
 	multipart: true
 })
+fastify.register(plugin, {
+  serverTimeout: 60000 //ms
+})
+
 
 // REGISTER ROUTERS
 fastify.register(homeRouter); //Home route

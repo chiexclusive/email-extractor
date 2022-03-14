@@ -204,8 +204,9 @@ class ExtractorEngine {
 						//Check if the next button still exist on the page
 						this.isGoogleEnd = await googlePage.evaluate(() => {
 							return document.querySelector("#pnnext") ? false : true
-						})
-						if(this.isGoogleEnd) await History.findOneAndDelete({query, domain: "google"})
+						})//When there is no next value
+						this.isGoogleEnd = newMails.length > 0 ? false : true //When no email was matched on the page
+						if(this.isGoogleEnd ) await History.findOneAndDelete({query, domain: "google"})
 					}catch(err){
 						console.log("====================EXTRACTION ENGINE======================")
 						console.log(err)
@@ -326,7 +327,7 @@ class ExtractorEngine {
 						html = html.toString();
 
 						//Get emails
-						newMails = html.match(/\S+@{1,1}\S+?\.{1,1}com{1,1}?/g)
+						newMails = html.match(/\S+@{1,1}\S+?\.{1,1}com{1,1}?/g) || []
 						//Clean emails
 						newMails = this.cleanEmails(newMails)
 						//Store
@@ -337,7 +338,8 @@ class ExtractorEngine {
 						//Check if the next button still exist on the page
 						this.isBingEnd = await bingPage.evaluate(() => {
 							return document.querySelector(".sb_pagN") ? false : true
-						})
+						})//When there is no next value
+						this.isBindEnd = newMails.length > 0 ? false : true //When no email was matched on the page
 						if(this.isBingEnd) await History.findOneAndDelete({query, domain: "bing"})
 					}catch(err){
 						console.log("====================EXTRACTION ENGINE======================")
@@ -381,7 +383,7 @@ class ExtractorEngine {
 						if(url){
 							// URL FOUND => CONTINUE
 							try{
-								await yahooPage.goto("https://search.yahoo.com"+url.url, {waitUntil: "networkidle0", timeout: 1000000});
+								await yahooPage.goto(url.url, {waitUntil: "networkidle0", timeout: 1000000});
 								paginatedUrl = await yahooPage.evaluate(() => {
 									if(document.querySelector(".next")){
 										let url = document.querySelector(".next").getAttribute("href")
@@ -461,7 +463,7 @@ class ExtractorEngine {
 						html = html.toString();
 					
 						//Get emails
-						newMails = html.match(/\S+@{1,1}\S+?\.{1,1}com{1,1}?/g)
+						newMails = html.match(/\S+@{1,1}\S+?\.{1,1}com{1,1}?/g) || []
 						//Clean emails
 						newMails = this.cleanEmails(newMails)
 						//Store
@@ -472,7 +474,8 @@ class ExtractorEngine {
 						//Check if the next button still exist on the page
 						this.isYahooEnd = await yahooPage.evaluate(() => {
 							return document.querySelector(".next") ? false : true
-						})
+						})//When there is no next value
+						this.isYahooEnd = newMails.length > 0 ? false : true //When no email was matched on the page
 						if(this.isYahooEnd) await History.findOneAndDelete({query, domain: "yahoo"})
 					}catch(err){
 						console.log("====================EXTRACTION ENGINE======================")
@@ -550,7 +553,7 @@ class ExtractorEngine {
 						html = html.toString();
 
 						//Get emails
-						newMails = html.match(/\S+@{1,1}\S+?\.{1,1}com{1,1}?/g)
+						newMails = html.match(/\S+@{1,1}\S+?\.{1,1}com{1,1}?/g) || []
 						let uniqueMail = []
 
 						if(!this.previousDuckDuckEmailLength) this.previousDuckDuckEmailLength = 0;
@@ -574,7 +577,8 @@ class ExtractorEngine {
 						//Check if the next button still exist on the page
 						this.isDuckDuckGoEnd = await duckDuckGoPage.evaluate(() => {
 							return document.querySelector(".result--more") ? false : true
-						})
+						})//When there is no next value
+						this.isDuckDuckGoEnd = newMails.length > 0 ? false : true //When no email was matched on the page
 					}catch(err){
 						console.log("====================EXTRACTION ENGINE======================")
 						console.log(err)

@@ -29,7 +29,7 @@ class Extract {
 		// GET STAT FOR TODAY
 		try{
 			const stat = await Stat.findOne({day: today});
-			if(stat && ((+stat.genNum) + (+limit)) > 100) return reply.code(400).type("application/json").send({status: false, message: `You have ${500 - stat.genNum} number of emails left for today`})
+			if(stat && ((+stat.genNum) + (+limit)) > 500) return reply.code(400).type("application/json").send({status: false, message: `You have ${500 - stat.genNum} number of emails left for today`})
 		}catch(err){
 			console.log("================EXTRACT CONTROLLER=============")
 			console.log(err)
