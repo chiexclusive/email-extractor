@@ -13,6 +13,7 @@ const getStatic = require("fastify-static");
 const fastifyCookie = require("fastify-cookie");
 const fastifySimpleForm = require("fastify-simple-form")
 const environment = require("dotenv")
+const bootstrapDatabase = require("./../conns/mongo.conn.js")
 
 // USE ENVIRONMENT FROM FILE
 environment.config();
@@ -46,6 +47,8 @@ module.exports = {
 			await fastify.register(middie)
 			// REGISTER MIDDLEWARES
 			fastify.use(responseCompression());
+			// START DB
+			bootstrapDatabase();
 			await next()
 		}catch(err){
 			fastify.log.error(err);

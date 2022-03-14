@@ -36,7 +36,10 @@ const extractRouter = (fastify, options, done) => {
 		preHandler: [
 			(req, reply, done) => {
 				if(controller.access.auth(req.cookies.token)) done()
-				else reply.code(401).type("application/json").send(JSON.stringify({status: false, message: "Unauthorized, Reload page to continue."}))
+				else{
+					reply.code(401).type("application/json").send(JSON.stringify({status: false, message: "Unauthorized, Reload page to continue."}))
+					done()
+				}
 			},
 			controller.extract.validateExtrationPreferences
 		],

@@ -173,11 +173,14 @@
 				return res.json()
 			})
 			.then((res) => {
-				console.log(res)
-				const txt = res.join(",\r\n")
-				
-				var blob = new Blob([txt], {type: "text/plain;charset=utf-8"});
-				saveAs(blob, `email_${res.length}.txt`)
+				if(res){
+					const txt = res.join(",\r\n")
+					
+					var blob = new Blob([txt], {type: "text/plain;charset=utf-8"});
+					saveAs(blob, `email_${res.length}.txt`)
+				}else{
+					log("Unidentified Error", false)
+				}
 			})
 		}
 

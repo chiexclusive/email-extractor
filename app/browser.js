@@ -18,15 +18,17 @@ function startBrowser(){
 				headless: true,
 				slowMo: 50,
 				userDataDir: "./user_data2",
-				ignoreDefaultArgs: ['--disable-extension']
+				ignoreDefaultArgs: ['--disable-extension'],
+				ignoreHTTPSErrors: true
 			}
 
 			if(process.env.NODE_ENV.toString().trim() === "development"){
 				options['executablePath'] = "C:/Program Files/Google/Chrome/Application/chrome.exe"
-				options['headless'] = false
+				options['headless'] = true
 			}
 			chrome = await puppeteer.launch(options)
 			chrome = await chrome.createIncognitoBrowserContext()
+
 
 			// //Start new page
 			googlePage = await chrome.newPage();
@@ -34,12 +36,13 @@ function startBrowser(){
 			yahooPage = await chrome.newPage();
 			duckDuckGoPage = await chrome.newPage();
 			console.log("Chrome has been launched");
-			resolve({googlePage, bingPage, yahooPage, duckDuckGoPage});
+			resolve({chrome, googlePage, bingPage, yahooPage, duckDuckGoPage});
 		}catch(err){
+			console.log("====================LAUNCHING BROWSER======================")
 			console.log(err)
 			reject(err)
 		}
 	})
 }
 
-module.exports = startBrowser();
+module.exports = startBrowser;
