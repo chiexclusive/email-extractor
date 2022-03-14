@@ -78,6 +78,7 @@ class ExtractorEngine {
 
 				//Start with google
 				if(!this.isGoogleEnd){
+					console.log("================GOOGLE EXTRATING...")
 					try{
 						await googlePage.bringToFront();
 					}catch(err){
@@ -193,12 +194,11 @@ class ExtractorEngine {
 					
 						//Clean emails
 						newMails = this.cleanEmails(newMails)
+						console.log(newMails)
 						//Store
 						if(newMails) this.emails = [...this.emails, ...newMails];
 						//Check is the target is met
 						emailTarget = this.emailTarget();
-						console.log(this.emails.length)
-						console.log(this.limit)
 						
 						if(emailTarget.isMet) return resolve(this.emails)
 						//Check if the next button still exist on the page
@@ -218,6 +218,7 @@ class ExtractorEngine {
 				//Start with bing
 				if(!this.isBingEnd){
 					try{
+						console.log("================BING EXTRATING...")
 						await bingPage.bringToFront();
 					}catch(err){
 						console.log("====================EXTRACTION ENGINE======================")
@@ -330,6 +331,7 @@ class ExtractorEngine {
 						newMails = html.match(/\S+@{1,1}\S+?\.{1,1}com{1,1}?/g) || []
 						//Clean emails
 						newMails = this.cleanEmails(newMails)
+						console.log(newMails)
 						//Store
 						if(newMails) this.emails = [...this.emails, ...newMails];
 						//Check is the target is met
@@ -354,6 +356,7 @@ class ExtractorEngine {
 				//Start with yahoo
 				if(!this.isYahooEnd){
 					try{
+						console.log("================YAHOO EXTRATING...")
 						await yahooPage.bringToFront();
 					}catch(err){
 						console.log("====================EXTRACTION ENGINE======================")
@@ -466,6 +469,7 @@ class ExtractorEngine {
 						newMails = html.match(/\S+@{1,1}\S+?\.{1,1}com{1,1}?/g) || []
 						//Clean emails
 						newMails = this.cleanEmails(newMails)
+						console.log(newMails)
 						//Store
 						if(newMails) this.emails = [...this.emails, ...newMails];
 						//Check is the target is met
@@ -488,6 +492,7 @@ class ExtractorEngine {
 				//Start with duck duck
 				if(!this.isDuckDuckGoEnd){
 					try{
+						console.log("================DUCKDUCK GO EXTRATING...")
 						await duckDuckGoPage.bringToFront();
 					}catch(err){
 						console.log("====================EXTRACTION ENGINE======================")
@@ -569,6 +574,7 @@ class ExtractorEngine {
 						this.previousDuckDuckEmailLength += newMails.length;
 						//Clean emails)
 						newMails = this.cleanEmails(newMails)
+						console.log(newMails)
 						//Store
 						if(newMails) this.emails = [...this.emails, ...newMails];
 						//Check is the target is met

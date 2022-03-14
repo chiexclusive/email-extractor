@@ -26,6 +26,7 @@ function startBrowser(){
 				options['executablePath'] = "C:/Program Files/Google/Chrome/Application/chrome.exe"
 				options['headless'] = false
 			}
+			console.log("====================LAUNCHING BROWSER======================")
 			chrome = await puppeteer.launch(options)
 			chrome = await chrome.createIncognitoBrowserContext()
 

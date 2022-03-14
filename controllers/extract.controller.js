@@ -70,7 +70,7 @@ class Extract {
 		extraction
 		.then(async(instance) => {
 			const query = `${domain.trim()} ${keyword.trim()} ${email.trim()}`.toLowerCase()	
-
+			console.log("========================GET EMAIL FUNC HAS BEEN CALLED========================")
 			emails = await instance.getEmail(query, limit)
 			fileName = `emails_${emails.length}`;
 
