@@ -11,7 +11,7 @@ const bootstrapDatabase = async (url) => {
 
 	try{
 		hasTriedConnection = true
-		const uri = process.env.NODE_ENV !== "development"?process.env.MONGODB_URI:process.env.MONGODB_PROD_URI
+		const uri = process.env.NODE_ENV == "development"?process.env.MONGODB_URI:process.env.MONGODB_PROD_URI
 		console.log(uri)
 		await mongoose.connect(uri)
 		console.log("Connected to mongodb")
