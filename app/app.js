@@ -35,7 +35,7 @@ fastify.register(fastifySimpleForm, {
 	urlencoded: true,
 	multipart: true
 })
-fastify.register(plugin, {
+fastify.register(httpTimeout, {
   serverTimeout: 60000 //ms
 })
 
