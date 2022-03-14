@@ -11,6 +11,7 @@ class Download {
 	//@name - Method
 	//@description - Download Text File of Emails
 	async processDownload(req, reply){
+		const date = new Date()
 		const today = date.getDay()+"/"+date.getMonth()+"/"+date.getFullYear();
 		try{
 			const stat = await Stat.findOne({day: today});
