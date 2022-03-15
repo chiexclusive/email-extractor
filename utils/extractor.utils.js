@@ -22,7 +22,7 @@ class ExtractorEngine {
 				chrome = utils.chrome
 				addBrowserDisconnectionEvent(chrome);
 			}catch(err){
-				console.log("====================EXTRACTION ENGINE======================")
+				console.log("====================EXTRACTION ENGINE ERROR======================")
 				console.log(err)
 			}
 			
@@ -44,7 +44,7 @@ class ExtractorEngine {
 				chrome = utils.chrome
 				addBrowserDisconnectionEvent(chrome);
 			}catch(err){
-				console.log("====================EXTRACTION ENGINE======================")
+				console.log("====================EXTRACTION ENGINE ERROR======================")
 				console.log(err);
 			}
 			
@@ -82,12 +82,12 @@ class ExtractorEngine {
 					try{
 						await googlePage.bringToFront();
 					}catch(err){
-						console.log("====================EXTRACTION ENGINE======================")
+						console.log("====================EXTRACTION ENGINE ERROR======================")
 						console.log(err)
 						try{
 							await googlePage.close()
 						}catch(err){
-							console.log("====================EXTRACTION ENGINE======================")
+							console.log("====================EXTRACTION ENGINE ERROR======================")
 							console.log(err)
 						}
 						googlePage = await chrome.newPage();
@@ -104,7 +104,7 @@ class ExtractorEngine {
 							url = await History.findOne({query, domain: "google"}).select("url")
 							console.log(url)
 						}catch(err){
-							console.log("====================EXTRACTION ENGINE======================")
+							console.log("====================EXTRACTION ENGINE ERROR======================")
 							console.log(err)
 						}
 
@@ -122,12 +122,12 @@ class ExtractorEngine {
 								if(paginatedUrl) await History.findOneAndUpdate({query, domain: "google"}, {url:paginatedUrl})
 								this.googleNextSelector =  "#pnnext";
 							}catch(err){
-								console.log("====================EXTRACTION ENGINE======================")
+								console.log("====================EXTRACTION ENGINE ERROR======================")
 								console.log(err)
 								try{
 									await googlePage.close()
 								}catch(err){
-									console.log("====================EXTRACTION ENGINE======================")
+									console.log("====================EXTRACTION ENGINE ERROR======================")
 									console.log(err)
 								}
 								googlePage = await chrome.newPage();
@@ -148,12 +148,12 @@ class ExtractorEngine {
 								if(paginatedUrl) await History.create({query, domain: "google", url:paginatedUrl});
 								this.googleNextSelector =  "#pnnext";
 							}catch(err){
-								console.log("====================EXTRACTION ENGINE======================")
+								console.log("====================EXTRACTION ENGINE ERROR======================")
 								console.log(err)
 								try{
 									await googlePage.close()
 								}catch(err){
-									console.log("====================EXTRACTION ENGINE======================")
+									console.log("====================EXTRACTION ENGINE ERROR======================")
 									console.log(err)
 								}
 								googlePage = await chrome.newPage();
@@ -173,7 +173,7 @@ class ExtractorEngine {
 							// SAVE PAGINATED URL (IF EXIST)
 							if(paginatedUrl) await History.findOneAndUpdate({query, domain: "google"}, {url:paginatedUrl})
 						}catch(err){
-							console.log("====================EXTRACTION ENGINE======================")
+							console.log("====================EXTRACTION ENGINE ERROR======================")
 							console.log(err)
 						}
 						
@@ -208,7 +208,7 @@ class ExtractorEngine {
 						this.isGoogleEnd = newMails.length > 0 ? false : true //When no email was matched on the page
 						if(this.isGoogleEnd ) await History.findOneAndDelete({query, domain: "google"})
 					}catch(err){
-						console.log("====================EXTRACTION ENGINE======================")
+						console.log("====================EXTRACTION ENGINE ERROR======================")
 						console.log(err)
 					}
 				}
@@ -221,13 +221,13 @@ class ExtractorEngine {
 						console.log("================BING EXTRATING...")
 						await bingPage.bringToFront();
 					}catch(err){
-						console.log("====================EXTRACTION ENGINE======================")
+						console.log("====================EXTRACTION ENGINE ERROR======================")
 						console.log(err)
 
 						try{
 							await bingPage.close()
 						}catch(err){
-							console.log("====================EXTRACTION ENGINE======================")
+							console.log("====================EXTRACTION ENGINE ERROR======================")
 							console.log(err)
 						}
 						bingPage = await chrome.newPage();
@@ -241,7 +241,7 @@ class ExtractorEngine {
 						try{
 							await History.findOne({query, domain: "bing"}).select("url")
 						}catch(err){
-							console.log("====================EXTRACTION ENGINE======================")
+							console.log("====================EXTRACTION ENGINE ERROR======================")
 							console.log(err)
 						}
 
@@ -259,13 +259,13 @@ class ExtractorEngine {
 								if(paginatedUrl) await History.findOneAndUpdate({query, domain: "bing"}, {url:paginatedUrl})
 								this.bingNextSelector =  ".sb_pagN";
 							}catch(err){
-								console.log("====================EXTRACTION ENGINE======================")
+								console.log("====================EXTRACTION ENGINE ERROR======================")
 								console.log(err)
 						
 								try{
 									await bingPage.close()
 								}catch(err){
-									console.log("====================EXTRACTION ENGINE======================")
+									console.log("====================EXTRACTION ENGINE ERROR======================")
 									console.log(err)
 								}
 							
@@ -286,13 +286,13 @@ class ExtractorEngine {
 								if(paginatedUrl) await History.create({query, domain: "bing", url:paginatedUrl});
 								this.bingNextSelector =  ".sb_pagN";
 							}catch(err){
-								console.log("====================EXTRACTION ENGINE======================")
+								console.log("====================EXTRACTION ENGINE ERROR======================")
 								console.log(err)
 							
 								try{
 									await bingPage.close()
 								}catch(err){
-									console.log("====================EXTRACTION ENGINE======================")
+									console.log("====================EXTRACTION ENGINE ERROR======================")
 									console.log(err)
 								}
 								bingPage = await chrome.newPage();
@@ -313,7 +313,7 @@ class ExtractorEngine {
 							// SAVE PAGINATED URL (IF EXIST)
 							if(paginatedUrl) await History.findOneAndUpdate({query, domain: "bing"}, {url:paginatedUrl})
 						}catch(err){
-							console.log("====================EXTRACTION ENGINE======================")
+							console.log("====================EXTRACTION ENGINE ERROR======================")
 							console.log(err)
 						}
 					}
@@ -344,7 +344,7 @@ class ExtractorEngine {
 						this.isBindEnd = newMails.length > 0 ? false : true //When no email was matched on the page
 						if(this.isBingEnd) await History.findOneAndDelete({query, domain: "bing"})
 					}catch(err){
-						console.log("====================EXTRACTION ENGINE======================")
+						console.log("====================EXTRACTION ENGINE ERROR======================")
 						console.log(err)
 					}
 				}
@@ -359,13 +359,13 @@ class ExtractorEngine {
 						console.log("================YAHOO EXTRATING...")
 						await yahooPage.bringToFront();
 					}catch(err){
-						console.log("====================EXTRACTION ENGINE======================")
+						console.log("====================EXTRACTION ENGINE ERROR======================")
 						console.log(err)
 
 						try{
 							await yahooPage.close()
 						}catch(err){
-							console.log("====================EXTRACTION ENGINE======================")
+							console.log("====================EXTRACTION ENGINE ERROR======================")
 							console.log(err)
 						}
 						yahooPage = await chrome.newPage();
@@ -379,7 +379,7 @@ class ExtractorEngine {
 						try{
 							url = await History.findOne({query, domain: "yahoo"}).select("url")
 						}catch(err){
-							console.log("====================EXTRACTION ENGINE======================")
+							console.log("====================EXTRACTION ENGINE ERROR======================")
 							console.log(err)
 						}
 
@@ -397,13 +397,13 @@ class ExtractorEngine {
 								if(paginatedUrl) await History.findOneAndUpdate({query, domain: "yahoo"}, {url:paginatedUrl})
 								this.yahooNextSelector =  ".next";
 							}catch(err){
-								console.log("====================EXTRACTION ENGINE======================")
+								console.log("====================EXTRACTION ENGINE ERROR======================")
 								console.log(err)
 							
 								try{
 									await yahooPage.close()
 								}catch(err){
-									console.log("====================EXTRACTION ENGINE======================")
+									console.log("====================EXTRACTION ENGINE ERROR======================")
 									console.log(err)
 								}
 								yahooPage = await chrome.newPage();
@@ -422,13 +422,13 @@ class ExtractorEngine {
 								if(paginatedUrl) await History.create({query, domain: "yahoo", url:paginatedUrl});
 								this.yahooNextSelector =  ".next";
 							}catch(err){
-								console.log("====================EXTRACTION ENGINE======================")
+								console.log("====================EXTRACTION ENGINE ERROR======================")
 								console.log(err)
 							
 								try{
 									await yahooPage.close()
 								}catch(err){
-									console.log("====================EXTRACTION ENGINE======================")
+									console.log("====================EXTRACTION ENGINE ERROR======================")
 									console.log(err)
 								}
 								yahooPage = await chrome.newPage();
@@ -449,7 +449,7 @@ class ExtractorEngine {
 							// SAVE PAGINATED URL (IF EXIST)
 							if(paginatedUrl) await History.findOneAndUpdate({query, domain: "yahoo"}, {url:paginatedUrl})
 						}catch(err){
-							console.log("====================EXTRACTION ENGINE======================")
+							console.log("====================EXTRACTION ENGINE ERROR======================")
 							console.log(err)
 						}
 					}
@@ -482,7 +482,7 @@ class ExtractorEngine {
 						this.isYahooEnd = newMails.length > 0 ? false : true //When no email was matched on the page
 						if(this.isYahooEnd) await History.findOneAndDelete({query, domain: "yahoo"})
 					}catch(err){
-						console.log("====================EXTRACTION ENGINE======================")
+						console.log("====================EXTRACTION ENGINE ERROR======================")
 						console.log(err)
 					}
 				}
@@ -495,13 +495,13 @@ class ExtractorEngine {
 						console.log("================DUCKDUCK GO EXTRATING...")
 						await duckDuckGoPage.bringToFront();
 					}catch(err){
-						console.log("====================EXTRACTION ENGINE======================")
+						console.log("====================EXTRACTION ENGINE ERROR======================")
 						console.log(err)
 					
 						try{
 							await duckDuckGoPage.close()
 						}catch(err){
-							console.log("====================EXTRACTION ENGINE======================")
+							console.log("====================EXTRACTION ENGINE ERROR======================")
 							console.log(err)
 						}
 						duckDuckGoPage = await chrome.newPage();
@@ -513,13 +513,13 @@ class ExtractorEngine {
 							await duckDuckGoPage.goto( `https://duckduckgo.com?q=${query}`, {waitUntil: "networkidle0", timeout: 1000000});
 							this.duckDuckGoNextSelector =  ".result--more";
 						}catch(err){
-							console.log("====================EXTRACTION ENGINE======================")
+							console.log("====================EXTRACTION ENGINE ERROR======================")
 							console.log(err)
 						
 							try{
 								await duckDuckGoPage.close()
 							}catch(err){
-								console.log("====================EXTRACTION ENGINE======================")
+								console.log("====================EXTRACTION ENGINE ERROR======================")
 								console.log(err)
 							}
 							duckDuckGoPage = await chrome.newPage();
@@ -543,7 +543,7 @@ class ExtractorEngine {
 								duckDuckGoPage.click(this.duckDuckGoNextSelector)
 							]);
 						}catch(err){
-							console.log("====================EXTRACTION ENGINE======================")
+							console.log("====================EXTRACTION ENGINE ERROR======================")
 							console.log(err)
 						}
 					}
@@ -586,7 +586,7 @@ class ExtractorEngine {
 						})//When there is no next value
 						this.isDuckDuckGoEnd = newMails.length > 0 ? false : true //When no email was matched on the page
 					}catch(err){
-						console.log("====================EXTRACTION ENGINE======================")
+						console.log("====================EXTRACTION ENGINE ERROR======================")
 						console.log(err)
 					}
 				}
@@ -603,7 +603,7 @@ class ExtractorEngine {
 						let result = await this.getEmail(query, limit)
 						return resolve(result)
 					}catch(err){
-						console.log("====================EXTRACTION ENGINE======================")
+						console.log("====================EXTRACTION ENGINE ERROR======================")
 						console.log(err)
 						return resolve(this.emails)
 					}
@@ -611,7 +611,7 @@ class ExtractorEngine {
 				}
 
 			}catch(err){
-				console.log("====================EXTRACTION ENGINE======================")
+				console.log("====================EXTRACTION ENGINE ERROR======================")
 				console.log(err)
 				return resolve(this.emails);
 			}	

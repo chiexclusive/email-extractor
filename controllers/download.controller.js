@@ -18,7 +18,7 @@ class Download {
 			const emails = stat ? stat.emails : []
 			reply.type("application/json").send(JSON.stringify(emails));
 		}catch(err){
-			console.log("==============DOWNLOAD CONTROLLER============")
+			console.log("==============DOWNLOAD CONTROLLER ERROR============")
 			console.log(err)
 			reply.code(500)
 		}

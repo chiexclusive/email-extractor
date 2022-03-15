@@ -31,7 +31,7 @@ class Extract {
 			const stat = await Stat.findOne({day: today});
 			if(stat && ((+stat.genNum) + (+limit)) > 500) return reply.code(400).type("application/json").send({status: false, message: `You have ${500 - stat.genNum} number of emails left for today`})
 		}catch(err){
-			console.log("================EXTRACT CONTROLLER=============")
+			console.log("================EXTRACT CONTROLLER ERROR=============")
 			console.log(err)
 			return reply.code(500).type("application/json").send({status: false, message: "Unidentified error"})
 		}
@@ -84,9 +84,11 @@ class Extract {
 				await Stat.create({day: today, emails, genNum: emails.length})
 			}
 
+			hasBeenCalled = false;
+
 			if(emails.length == 0) return reply.code(404).type("application/json").send({status: false, message: `No emails found`})
 			else{
-				reply.code(200).type("application/json").send(
+				return reply.code(200).type("application/json").send(
 					JSON.stringify({
 						status: true,
 						message: "Emails successfully extracted",
@@ -94,16 +96,13 @@ class Extract {
 					})
 				)
 			}
-			
-
-			// await instance.exitBrowser()
-			hasBeenCalled = false;
 
 			
 		})
 		.catch((err) => {
-			console.log("=====================EXTRACT CONTROLLER====================")
+			console.log("=====================EXTRACT CONTROLLER ERROR====================")
 			console.log(err)
+			hasBeenCalled = false;
 			reply.code(500).type("application/json").send({status: false, message: "Unidentified error"})
 		})
 	}
