@@ -1,5 +1,5 @@
 const email = require('node-email-extractor').default;
-let browser = require("./../app/browser");
+let browser = require("./../app/browser")();
 let  googlePage, bingPage, yahooPage, duckDuckGoPage, chrome;
 const History = require("./../schemas/history.schema.js")
 
@@ -14,7 +14,7 @@ class ExtractorEngine {
 		const addBrowserDisconnectionEvent = this.browserDisconnectionHandler;
 		return new Promise(async(resolve) =>{
 			try{
-				let utils = await browser();
+				let utils = await browser;
 				googlePage = utils.googlePage;
 				bingPage = utils.bingPage;
 				yahooPage = utils.yahooPage;
