@@ -24,7 +24,7 @@ function startBrowser(){
 
 			if(process.env.NODE_ENV.toString().trim() === "development"){
 				options['executablePath'] = "C:/Program Files/Google/Chrome/Application/chrome.exe"
-				options['headless'] = false
+				options['headless'] = true
 			}
 			console.log("====================LAUNCHING BROWSER======================")
 			chrome = await puppeteer.launch(options)
@@ -39,7 +39,7 @@ function startBrowser(){
 			console.log("Chrome has been launched");
 			resolve({chrome, googlePage, bingPage, yahooPage, duckDuckGoPage});
 		}catch(err){
-			console.log("====================LAUNCHING BROWSER======================")
+			console.log("====================LAUNCHING BROWSER ERROR======================")
 			console.log(err)
 			reject(err)
 		}

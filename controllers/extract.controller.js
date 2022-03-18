@@ -28,7 +28,8 @@ class Extract {
 
 		// GET STAT FOR TODAY
 		try{
-			const stat = await Stat.findOne({day: today});
+			const stat = await Stat.findOne({date: today});
+			console.log(stat, today)
 			if(stat && ((+stat.genNum) + (+limit)) > 500) return reply.code(400).type("application/json").send({status: false, message: `You have ${500 - stat.genNum} number of emails left for today`})
 		}catch(err){
 			console.log("================EXTRACT CONTROLLER ERROR=============")
@@ -74,7 +75,7 @@ class Extract {
 			emails = await instance.getEmail(query, limit)
 			fileName = `emails_${emails.length}`;
 
-			const stat = await Stat.findOne({day: today});
+			const stat = await Stat.findOne({date: today});
 			console.log(stat)
 			if(stat){
 				stat.emails = emails
