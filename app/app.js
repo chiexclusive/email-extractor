@@ -2,7 +2,7 @@
 
 // DEPENDENCIES
 const fastify = require("fastify")({logger: true});
-const {homeRouter, accessRouter, dashboardRouter, downloadRouter, extractRouter} = require("../router/index");
+const {homeRouter, accessRouter, dashboardRouter, downloadRouter, extractRouter, bulkMailRouter} = require("../router/index");
 const serveStatic = require("serve-static");
 const viewer = require("point-of-view");
 const ejs = require("ejs");
@@ -46,6 +46,7 @@ fastify.register(accessRouter); //Acess route
 fastify.register(dashboardRouter); //Dashboard route
 fastify.register(downloadRouter); //Download route
 fastify.register(extractRouter); // Extraction route
+fastify.register(bulkMailRouter); // Send Bulk route
 
 // SERVE STATIC FILES
 fastify.register(getStatic, {root: path.join(__dirname, "../public"), prefix: "/public/"})

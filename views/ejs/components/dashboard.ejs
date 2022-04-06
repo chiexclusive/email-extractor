@@ -73,6 +73,7 @@
 
 					<div class="form-group">
 						<button type = "button" class = "btn btn-success" id = "extract-button">Extract</button>
+
 					</div>
 
 					<div class="form-group output" class = "mt-3" id = "output">
@@ -80,6 +81,9 @@
 					</div>
 					
 				</form>
+				<div class = "mt-3">
+					<a href="/send_email"><button type = "button" class = "btn btn-danger">Send Email</button></a>
+				</div>
 				
 			</div>
 			<div class = "text-center mt-3 col-xs-12 col-sm-8 col-md-8 col-lg-6">
@@ -135,16 +139,29 @@
 						Download 
 							<span class = "fa fa-download"></span>
 						</button>
-					</div>`
+					</div>
+					<div class = "mt-3">
+						<button onclick = "copyEmails" type = "button" data-file = "${res.file}" class = "btn btn-success" id = "copy-button">
+						Copy
+							<span class = "fa fa-copy"></span>
+						</button>
+						<span class = "text-success copy-log"></span>
+					</div>
+					`
 					log(res.message, true)
 
 
 					//Get handle button
 					const downloadBtn = document.querySelector("#download-button");
+					const copyBtn = document.querySelector("#copy-button");
 
 					//Handle download click
 					downloadBtn.onclick = function(){
 						download()
+					}
+
+					copyBtn.onclick = function(){
+						copyEmails()
 					}
 				}
 
@@ -178,6 +195,32 @@
 					
 					var blob = new Blob([txt], {type: "text/plain;charset=utf-8"});
 					saveAs(blob, `email_${res.length}.txt`)
+				}else{
+					log("Unidentified Error", false)
+				}
+			})
+		}
+
+
+		//Handle download action
+		function copyEmails(){
+			const copyLog = document.querySelector(".copy-log")
+			if(copyLog) copyLog.textContent = ""
+			fetch("/download", {method: "POST"})
+			.then((res) => {
+				return res.json()
+			})
+			.then((res) => {
+				if(res){
+					const txt = res.join(",\r\n")
+					navigator.clipboard.writeText(txt);
+					if(copyLog){
+						copyLog.textContent = `Copied ${res.length} ${res.length > 1 ? "emails": "email"}!`
+						setTimeout(() => {
+							copyLog.textContent = ""
+						}, 2000)
+					}
+
 				}else{
 					log("Unidentified Error", false)
 				}
